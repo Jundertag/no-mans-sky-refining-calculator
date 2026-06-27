@@ -142,8 +142,8 @@ format_recipes: list[dict[str, Any]] = []
 for r in recipes:
     format_recipes.append(format_recipe(r))
 
-for f in format_recipes:
-    print_recipe(f)
+for i in range(len(format_recipes)):
+    print(f"idx: {i}, {print_recipe(format_recipes[i])}")
 
 if format_recipes == 1:
     recipe_option = 0
