@@ -104,7 +104,6 @@ def get_refiner_recipes_for_possible_item_name(name: str) -> list[Any]:
     
     return recipes
 
-# still json style
 def format_recipe(recipe: Any) -> dict[str, Any]:
     result = {}
 
