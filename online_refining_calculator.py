@@ -170,14 +170,14 @@ for i in range(len(required_inputs)):
 num_refineries = int(input("How many refineries do you plan to use to refine this recipe?: "))
 
 # required_inputs must contain "Name" and "Available"
-# returns dict containing "Name" and "Available"
+# returns dict containing "Name", "Available", and "Craft"
 def get_restricted_input(inventory: list[dict[str, Any]]) -> dict[str, Any]:
-    least_input = inventory[0]["Available"] * required_inputs[0]["Quantity"]
+    least_input = inventory[0]["Available"] / required_inputs[0]["Quantity"]
     least_input_available = inventory[0]["Available"]
     least_input_name = inventory[0]["Name"]
 
     for i in range(1, len(inventory)):
-        input_num = inventory[i]["Available"] * required_inputs[i]["Quantity"]
+        input_num = inventory[i]["Available"] / required_inputs[i]["Quantity"]
         if input_num < least_input:
             least_input = input_num
             least_input_available = inventory[i]["Available"]
@@ -185,18 +185,19 @@ def get_restricted_input(inventory: list[dict[str, Any]]) -> dict[str, Any]:
     
     return {
         "Name": least_input_name,
-        "Available": least_input_available
+        "Available": least_input_available,
+        "Crafts": least_input
     }
 
 restricted_input = get_restricted_input(inventory_available)
 
-max_total = (restricted_input["Available"] * chosen_recipe["Output"]["Quantity"])
+max_total = (restricted_input["Crafts"] * chosen_recipe["Output"]["Quantity"])
 
 total_time = (float(chosen_recipe["Time"]) * max_total) / chosen_recipe["Output"]["Quantity"]
 
 print(f"You can make a total of {max_total} {chosen_recipe["Output"]["Name"]} using {num_refineries} by putting")
 
 for i in range(len(chosen_recipe["Inputs"])):
-    print(f"{(restricted_input["Available"] * chosen_recipe["Inputs"][i]["Quantity"]) / num_refineries} {chosen_recipe["Inputs"][i]["Name"]}")
+    print(f"{((max_total / chosen_recipe["Output"]["Quantity"]) * chosen_recipe["Inputs"][i]["Quantity"]) / num_refineries} {chosen_recipe["Inputs"][i]["Name"]}")
 
 print(f"in each refinery, taking a total of {total_time / num_refineries} seconds")
